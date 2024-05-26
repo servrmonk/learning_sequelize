@@ -1,2 +1,4 @@
 WE ALSO need table in our database so i have to create a neew table bc we have deleted earlier one and sequelize can also create instead of createing form mysql apk 
 so  i am creating the tablein app.js file
+
+now if we go to http://localhost:3000/admin/add-product i can add the value 

@@ -22,15 +22,13 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-// sequelize.sync() //sync method look all the method we define  in product.js so it's aware of ur all the model and than basically creates a table for us that sync does, it syncs ur model to the database by creating the appropiate tables and if u have them relations  and .then listen to the result and catch the error
-
 sequelize
   .sync()
   .then((result) => {
-    // console.log("Result in sync", result);
+    
     console.log(result);
     app.listen(3000, () => {
       console.log("Server is running on port 3000");
-    }); //i only start if i somehow made it to then
+    });
   })
   .catch((err) => console.log("======>", err));

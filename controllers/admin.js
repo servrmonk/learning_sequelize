@@ -13,15 +13,20 @@ exports.postAddProduct = (req, res, next) => {
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
   const description = req.body.description;
-  const product = new Product(null, title, imageUrl, description, price);
+  // const product = new Product(null, title, imageUrl, description, price);
 
-  product
-    .save().then(() => {
-      //  idon;t care about the result i just want to redirect inside the function 
-      res.redirect('/');
+  Product.create({
+    //create
+    title: title,
+    price: price,
+    imageUrl: imageUrl,
+    description: description,
+  })
+    .then((result) => {
+      // console.log(result);
+      console.log("Created Product");
     })
-    .catch((err) => console.log("error in postaddproduct", err));
-  // res.redirect("/");
+    .catch((err) => console.log(err)); //this will saves it to the db , sequelize work with promise
 };
 
 exports.getEditProduct = (req, res, next) => {
@@ -68,14 +73,15 @@ exports.getProducts = (req, res, next) => {
   //     path: "/admin/products",
   //   });
   // });
-  Product.fetchAll().then(([rows])=>{
-    res.render("admin/products", {
-      prods: rows,
-      pageTitle: "Admin Products",
-      path: "/admin/products",
-    });
-  })
-  .catch((err) => console.log("Error in admin fetch",err));
+  Product.fetchAll()
+    .then(([rows]) => {
+      res.render("admin/products", {
+        prods: rows,
+        pageTitle: "Admin Products",
+        path: "/admin/products",
+      });
+    })
+    .catch((err) => console.log("Error in admin fetch", err));
 };
 
 exports.postDeleteProduct = (req, res, next) => {
