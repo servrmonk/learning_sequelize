@@ -12,21 +12,33 @@ exports.getProducts = (req, res, next) => {
       });
     })
     .catch((err) => console.log(err));
-
 };
 
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId;
-  Product.findById(prodId)
-    .then(([product]) => {
-      // console.log("Product in getproduct ",product); here product is just an array
+  // Product.findById(prodId).then((product) => { //not findById use findbypk
+  // .then(([product]) => { //in sequelize we don't get an array of product here instead i get asingle product
+  // Product.findByPk(prodId).then((product) => {
+  // using where key with findAll
+
+  Product.findAll({ where: { id: prodId } })
+    .then((products) => {
       res.render("shop/product-detail", {
-        product: product[0],
-        pageTitle: product.title,
+        product: products[0],
+        pageTitle: products[0].title,
         path: "/products",
       });
     })
-    .catch((err) => console.log("Error in getproducbyid==> ", err)); //product is just the first arg of the arrya u can name anything just destructuring work
+    .catch((err) => console.log(err));
+
+  // Product.findByPk(prodId).then((product) => {
+  //   res.render("shop/product-detail", {
+  //     product: product,
+  //     pageTitle: product.title,
+  //     path: "/products",
+  //   });
+  // })
+  // .catch((err) => console.log("Error in getproducbyid==> ", err));
 };
 
 exports.getIndex = (req, res, next) => {
@@ -40,16 +52,6 @@ exports.getIndex = (req, res, next) => {
       });
     })
     .catch((err) => console.log(err));
-
-  // Product.fetchAll()
-  //   .then(([rows, fieldData]) => {
-  // res.render("shop/index", {
-  //   prods: rows,
-  //   pageTitle: "Shop",
-  //   path: "/",
-  // });
-  // })
-  // .catch((err) => console.log("Error in fetchall"));
 };
 
 exports.getCart = (req, res, next) => {

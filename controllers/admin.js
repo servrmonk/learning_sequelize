@@ -26,7 +26,7 @@ exports.postAddProduct = (req, res, next) => {
       // console.log(result);
       console.log("Created Product");
     })
-    .catch((err) => console.log(err)); //this will saves it to the db , sequelize work with promise
+    .catch((err) => console.log(err)); 
 };
 
 exports.getEditProduct = (req, res, next) => {
@@ -66,13 +66,7 @@ exports.postEditProduct = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  // Product.fetchAll((products) => {
-  //   res.render("admin/products", {
-  //     prods: products,
-  //     pageTitle: "Admin Products",
-  //     path: "/admin/products",
-  //   });
-  // });
+
   Product.fetchAll()
     .then(([rows]) => {
       res.render("admin/products", {
