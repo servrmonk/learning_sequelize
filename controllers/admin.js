@@ -25,6 +25,7 @@ exports.postAddProduct = (req, res, next) => {
     .then((result) => {
       // console.log(result);
       console.log("Created Product");
+      res.redirect('/admin/products')
     })
     .catch((err) => console.log(err));
 };
@@ -65,23 +66,23 @@ exports.postEditProduct = (req, res, next) => {
   //   updatedPrice
   // );
   // updatedProduct.save();
-  Product.findByPk(prodId).then(product => {
-    product.title = updatedTitle;
-    product.price = updatedPrice;
-    product.description = updatedDesc;
-    product.imageUrl = updatedImageUrl;
-    
-    return product.save(); //save method provided by sequelize  and this now takes the product as we edited and saves the product to the db , if the product doesnot exist than it will create new one but if it exist than it overwrite or update with our new value, and this save will return a promise so we do promise chanining 
+  Product.findByPk(prodId)
+    .then((product) => {
+      product.title = updatedTitle;
+      product.price = updatedPrice;
+      product.description = updatedDesc;
+      product.imageUrl = updatedImageUrl;
 
-    
-
-  }).then(result =>{
-    console.log("Updated Product");
-  })
-  .catch(err =>console.log(err))
-  // if we click edit and submit new value than we don't get the new value until we change our route or  we refresh the page so this happen because of async operation if we use async await  we can avoid 
+      return product.save(); //save method provided by sequelize  and this now takes the product as we edited and saves the product to the db , if the product doesnot exist than it will create new one but if it exist than it overwrite or update with our new value, and this save will return a promise so we do promise chanining
+    })
+    .then((result) => {
+      console.log("Updated Product");
+      res.redirect("/admin/products");
+    })
+    .catch((err) => console.log(err));
+  // if we click edit and submit new value than we don't get the new value until we change our route or  we refresh the page so this happen because of async operation if we use async await  we can avoid
   // here it is redirected before the promise is done
-  res.redirect("/admin/products");
+  // res.redirect("/admin/products"); //so we put it inside the then block
 };
 
 exports.getProducts = (req, res, next) => {
@@ -98,6 +99,15 @@ exports.getProducts = (req, res, next) => {
 
 exports.postDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.deleteById(prodId);
-  res.redirect("/admin/products");
+  // Product.deleteById(prodId);
+  // destroy allow us to destroy with this conditon
+  Product.findByPk(prodId)
+    .then((product) => {
+      return product.destroy(); //it also return a promise
+    })
+    .then((result) => {
+      console.log("DESTROYED PRODUCT");
+      res.redirect("/admin/products");
+    })
+    .catch((err) => console.log(err));
 };
